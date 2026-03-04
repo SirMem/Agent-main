@@ -1,0 +1,29 @@
+package com.dasi.domain.ai.model.enumeration;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public enum AiType {
+
+    CLIENT("客户端", "client"),
+    MODEL("对话模型", "model"),
+    API("接口", "api"),
+    MCP("工具", "mcp"),
+    PROMPT("系统提示词", "prompt"),
+    ADVISOR("顾问", "advisor"),
+    AGENT("智能体", "agent"),
+    ;
+
+    private String name;
+
+    private String type;
+    
+    public String getBeanName(String id) {
+        return "bean_" + id;
+    }
+
+}

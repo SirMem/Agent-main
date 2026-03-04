@@ -1,0 +1,133 @@
+package com.dasi.domain.ai.service.execute;
+
+import cn.bugstack.wrench.design.framework.tree.AbstractMultiThreadStrategyRouter;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.dasi.domain.ai.model.entity.ExecuteRequestEntity;
+import com.dasi.domain.ai.model.entity.ExecuteResponseEntity;
+import com.dasi.domain.ai.repository.IAiRepository;
+import com.dasi.domain.util.message.IMessageService;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import static com.dasi.domain.ai.model.enumeration.AiSectionType.REPLIER_OVERVIEW;
+import static com.dasi.domain.ai.model.enumeration.AiSectionType.SUMMARIZER_OVERVIEW;
+
+@Slf4j
+public abstract class AbstractExecuteNode extends AbstractMultiThreadStrategyRouter<ExecuteRequestEntity, ExecuteContext, String> {
+
+    @Resource
+    protected ApplicationContext applicationContext;
+
+    @Resource
+    protected IAiRepository aiRepository;
+
+    @Resource
+    private IMessageService messageService;
+
+    @Override
+    protected void multiThread(ExecuteRequestEntity executeRequestEntity, ExecuteContext executeContext) {
+        // 缺省的，可以让继承类不一定非要实现该方法
+    }
+
+    protected <T> T getBean(String beanName) {
+        return (T) applicationContext.getBean(beanName);
+    }
+
+    protected void sendSseMessage(ExecuteContext executeContext, ExecuteResponseEntity executeResponseEntity) {
+
+        SseEmitter sseEmitter = executeContext.getValue("sseEmitter");
+        if (sseEmitter == null) {
+            return;
+        }
+
+        try {
+            sseEmitter.send(SseEmitter.event()
+                    .name("message")
+                    .id(String.valueOf(executeResponseEntity.getTimestamp()))
+                    .data(executeResponseEntity));
+
+        } catch (Exception e) {
+            log.error("【Agent 执行】发送 SSE 消息失败：{}", e.getMessage(), e);
+        }
+
+        persistWorkMessage(executeResponseEntity);
+    }
+
+    private void persistWorkMessage(ExecuteResponseEntity executeResponseEntity) {
+
+        String sessionId = executeResponseEntity.getSessionId();
+        String sectionType = executeResponseEntity.getSectionType();
+
+        try {
+            String payload = JSON.toJSONString(executeResponseEntity);
+            messageService.saveWorkSseMessage(sessionId, payload);
+            if (SUMMARIZER_OVERVIEW.getType().equals(sectionType) || REPLIER_OVERVIEW.getType().equals(sectionType)) {
+                messageService.saveWorkAssistantMessage(sessionId, executeResponseEntity.getSectionContent());
+            }
+        } catch (Exception e) {
+            log.warn("【Agent 执行】保存消息失败：{}", e.getMessage());
+        }
+    }
+
+    protected String extractJson(String content, String schema) {
+        try {
+            // 1) 去 think + 去代码块围栏
+            String cleaned = content
+                    .replaceAll("(?s)<think>.*?</think>", "")
+                    .replace("<think>", "")
+                    .replace("</think>", "")
+                    .trim();
+
+            // 2) 提取 JSON 块
+            if ("{}".equals(schema)) {
+                int start = cleaned.indexOf('{');
+                int end = cleaned.lastIndexOf('}');
+                cleaned = cleaned.substring(start, end + 1).trim();
+            } else if ("[]".equals(schema)) {
+                int start = cleaned.indexOf('[');
+                int end = cleaned.lastIndexOf(']');
+                cleaned = cleaned.substring(start, end + 1).trim();
+            }
+
+            // 3) 更改冒号
+            cleaned = cleaned
+                    .replaceAll("：\\s*", ":")
+                    .replaceAll(":[ \\t]+", ": ")
+                    .replaceAll(":(?![ \\t\\r\\n])(?!(//))", ": ")
+                    .trim();
+
+            // 4) 更改换行
+            cleaned = cleaned.replace("\r\n", "\n").replace("\r", "\n");
+            return cleaned;
+        } catch (Exception e) {
+            log.warn("【Agent 执行】JSON 提取失败：{}", e.getMessage());
+            throw e;
+        }
+    }
+
+    protected JSONObject parseJsonObject(String json) {
+        return JSON.parseObject(json);
+    }
+
+    protected JSONArray parseJsonArray(String json) {
+        return JSON.parseArray(json);
+    }
+
+    protected JSONObject buildExceptionObject(String key, String message) {
+        message = (message == null || message.isBlank()) ? "执行异常" : message;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(key, message);
+        return jsonObject;
+    }
+
+    protected JSONArray buildExceptionArray(String key, String message) {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(buildExceptionObject(key, message));
+        return jsonArray;
+    }
+
+}
