@@ -77,31 +77,35 @@ public class ArmoryConfig implements ApplicationListener<ApplicationReadyEvent> 
         for (String clientId : clientIdList) {
             try {
 
+                String promptId;
                 // 解析 promptId 和 fileName
-                String promptId = "prompt_" + clientId.substring("client_".length());
+                if (clientId.contains("client_")) {
+                    promptId = "prompt_" + clientId.substring("client_".length());
+                } else {
+                    promptId = "prompt_" + clientId;
+                }
+
                 String fileName = clientId + ".txt";
 
                 // 解析文件路径
                 Resource systemPromptFile = resolver.getResource("classpath:prompt/system-prompt/" + fileName);
-                if (!systemPromptFile.exists()) {
+                if (systemPromptFile.exists()) {
+                    // 更新 Prompt
+                    String systemPromptContent = StreamUtils.copyToString(systemPromptFile.getInputStream(), StandardCharsets.UTF_8);
+                    promptDao.loadPromptContent(promptId, systemPromptContent);
+                } else {
                     log.error("【初始化配置】Prompt 文件不存在：{}", systemPromptFile.getDescription());
-                    throw new IllegalStateException();
                 }
 
                 Resource userPromptFile = resolver.getResource("classpath:prompt/user-prompt/" + fileName);
-                if (!userPromptFile.exists()) {
+                if (userPromptFile.exists()) {
+                    String userPromptContent = StreamUtils.copyToString(userPromptFile.getInputStream(), StandardCharsets.UTF_8);
+                    flowDao.loadFlowPrompt(clientId, userPromptContent);
+                    log.info("【初始化配置】加载 Prompt：clientId={}", clientId);
+                } else {
                     log.error("【初始化配置】Prompt 文件不存在：{}", userPromptFile.getDescription());
-                    throw new IllegalStateException();
                 }
 
-                // 更新 Prompt
-                String systemPromptContent = StreamUtils.copyToString(systemPromptFile.getInputStream(), StandardCharsets.UTF_8);
-                promptDao.loadPromptContent(promptId, systemPromptContent);
-
-                String userPromptContent = StreamUtils.copyToString(userPromptFile.getInputStream(), StandardCharsets.UTF_8);
-                flowDao.loadFlowPrompt(clientId, userPromptContent);
-
-                log.info("【初始化配置】加载 Prompt：clientId={}", clientId);
 
             } catch (Exception e) {
                 log.error("【初始化配置】加载 prompt 失败：clientId={}", clientId, e);
