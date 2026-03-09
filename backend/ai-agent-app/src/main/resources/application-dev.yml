@@ -57,7 +57,7 @@ datasource:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbc-url: jdbc:mysql://127.0.0.1:3306/${MYSQL_DB_NAME}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=false
+    jdbc-url: jdbc:mysql://127.0.0.1:3306/${MYSQL_DB_NAME}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
     pool-name: MYSQL_HIKARI
 
   postgresql:
