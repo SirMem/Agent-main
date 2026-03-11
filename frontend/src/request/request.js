@@ -2,9 +2,11 @@ import axios from 'axios';
 import router from '../router/router';
 import { useAuthStore } from '../router/pinia';
 
-// Dev: VITE_API_BASE=http://localhost:8066
-// Prod behind nginx under /agent: VITE_API_BASE=/agent
-const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:8066';
+// Use VITE_API_BASE to control API endpoint.
+// Endpoints in api.js already start with /api, so default should be empty.
+// e.g. local direct backend: VITE_API_BASE=http://localhost:8066
+// e.g. docker/nginx proxy: VITE_API_BASE=
+const BASE_URL = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '');
 const REQUEST_TIMEOUT = 600000;
 const SETTINGS_KEY = 'chat_settings';
 const AUTH_KEY = 'auth_info';
