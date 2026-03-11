@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IAiModelDao">
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.AiModel">
+        <id column="id" property="id"/>
+        <result column="model_id" property="modelId"/>
+        <result column="api_id" property="apiId"/>
+        <result column="model_name" property="modelName"/>
+        <result column="model_type" property="modelType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryByModelId" parameterType="java.lang.String" resultMap="dataMap">
+        SELECT id,
+               model_id,
+               api_id,
+               model_name,
+               model_type,
+               create_time,
+               update_time
+        FROM ai_model
+        WHERE model_id = #{modelId}
+    </select>
+
+    <select id="page" resultMap="dataMap">
+        SELECT id,
+               model_id,
+               api_id,
+               model_name,
+               model_type,
+               create_time,
+               update_time
+        FROM ai_model
+        <where>
+            <if test="idKeyword != null and idKeyword != ''">
+                AND model_id LIKE CONCAT('%', #{idKeyword}, '%')
+            </if>
+            <if test="nameKeyword != null and nameKeyword != ''">
+                AND model_name LIKE CONCAT('%', #{nameKeyword}, '%')
+            </if>
+            <if test="apiId != null and apiId != ''">
+                AND model_name LIKE CONCAT('%', #{apiId}, '%')
+            </if>
+        </where>
+        ORDER BY update_time DESC, id DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM ai_model
+        <where>
+            <if test="idKeyword != null and idKeyword != ''">
+                AND model_id LIKE CONCAT('%', #{idKeyword}, '%')
+            </if>
+            <if test="nameKeyword != null and nameKeyword != ''">
+                AND model_name LIKE CONCAT('%', #{nameKeyword}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM ai_model
+    </select>
+
+    <select id="queryById" resultMap="dataMap">
+        SELECT id,
+               model_id,
+               api_id,
+               model_name,
+               model_type,
+               create_time,
+               update_time
+        FROM ai_model
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryModelIdByApiId" resultType="java.lang.String">
+        SELECT model_id
+        FROM ai_model
+        WHERE api_id = #{apiId}
+    </select>
+
+    <select id="listModelId" resultType="java.lang.String">
+        SELECT model_id
+        FROM ai_model
+    </select>
+
+    <insert id="insert" parameterType="com.dasi.infrastructure.persistent.po.AiModel">
+        INSERT INTO ai_model (model_id,
+                              api_id,
+                              model_name,
+                              model_type)
+        VALUES (#{modelId},
+                #{apiId},
+                #{modelName},
+                #{modelType})
+    </insert>
+
+    <update id="update" parameterType="com.dasi.infrastructure.persistent.po.AiModel">
+        UPDATE ai_model
+        <set>
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="apiId != null">api_id = #{apiId},</if>
+            <if test="modelName != null">model_name = #{modelName},</if>
+            <if test="modelType != null">model_type = #{modelType},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM ai_model
+        WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IAiAgentDao">
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.AiAgent">
+        <id column="id" property="id"/>
+        <result column="agent_id" property="agentId"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="agent_type" property="agentType"/>
+        <result column="agent_desc" property="agentDesc"/>
+        <result column="agent_status" property="agentStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryAgentList" resultMap="dataMap">
+        SELECT id,
+               agent_id,
+               agent_name,
+               agent_type,
+               agent_desc,
+               agent_status,
+               create_time,
+               update_time
+        FROM ai_agent
+    </select>
+
+    <select id="queryAgentByAgentId" resultMap="dataMap">
+        SELECT id,
+               agent_id,
+               agent_name,
+               agent_type,
+               agent_desc,
+               agent_status,
+               create_time,
+               update_time
+        FROM ai_agent
+        WHERE agent_id = #{agentId}
+    </select>
+
+    <select id="page" resultMap="dataMap">
+        SELECT id,
+               agent_id,
+               agent_name,
+               agent_type,
+               agent_desc,
+               agent_status,
+               create_time,
+               update_time
+        FROM ai_agent
+        <where>
+            <if test="idKeyword != null and idKeyword != ''">
+                AND agent_id LIKE CONCAT('%', #{idKeyword}, '%')
+            </if>
+            <if test="nameKeyword != null and nameKeyword != ''">
+                AND agent_name LIKE CONCAT('%', #{nameKeyword}, '%')
+            </if>
+            <if test="agentType != null and agentType != ''">
+                AND agent_type = #{agentType}
+            </if>
+        </where>
+        ORDER BY update_time DESC, id DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="list" resultMap="dataMap">
+        SELECT id,
+        agent_id,
+        agent_name,
+        agent_type,
+        agent_desc,
+        agent_status,
+        create_time,
+        update_time
+        FROM ai_agent
+        <where>
+            <if test="idKeyword != null and idKeyword != ''">
+                AND agent_id LIKE CONCAT('%', #{idKeyword}, '%')
+            </if>
+            <if test="nameKeyword != null and nameKeyword != ''">
+                AND agent_name LIKE CONCAT('%', #{nameKeyword}, '%')
+            </if>
+            <if test="agentType != null and agentType != ''">
+                AND agent_type = #{agentType}
+            </if>
+        </where>
+        ORDER BY update_time DESC, id DESC
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM ai_agent
+        <where>
+            <if test="idKeyword != null and idKeyword != ''">
+                AND agent_id LIKE CONCAT('%', #{idKeyword}, '%')
+            </if>
+            <if test="nameKeyword != null and nameKeyword != ''">
+                AND agent_name LIKE CONCAT('%', #{nameKeyword}, '%')
+            </if>
+            <if test="agentType != null and agentType != ''">
+                AND agent_type = #{agentType}
+            </if>
+        </where>
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM ai_agent
+    </select>
+
+    <select id="queryById" resultMap="dataMap">
+        SELECT id,
+               agent_id,
+               agent_name,
+               agent_type,
+               agent_desc,
+               agent_status,
+               create_time,
+               update_time
+        FROM ai_agent
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.dasi.infrastructure.persistent.po.AiAgent">
+        INSERT INTO ai_agent (agent_id,
+                              agent_name,
+                              agent_type,
+                              agent_desc,
+                              agent_status)
+        VALUES (#{agentId},
+                #{agentName},
+                #{agentType},
+                #{agentDesc},
+                #{agentStatus})
+    </insert>
+
+    <update id="update" parameterType="com.dasi.infrastructure.persistent.po.AiAgent">
+        UPDATE ai_agent
+        <set>
+            <if test="agentId != null">agent_id = #{agentId},</if>
+            <if test="agentName != null">agent_name = #{agentName},</if>
+            <if test="agentType != null">agent_type = #{agentType},</if>
+            <if test="agentDesc != null">agent_desc = #{agentDesc},</if>
+            <if test="agentStatus != null">agent_status = #{agentStatus},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="toggle" parameterType="com.dasi.infrastructure.persistent.po.AiAgent">
+        UPDATE ai_agent
+        SET agent_status = #{agentStatus}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM ai_agent
+        WHERE id = #{id}
+    </delete>
+</mapper>

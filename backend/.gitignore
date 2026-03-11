@@ -58,6 +58,8 @@ application-*.yml
 !docs/docker/mysql/01-init-mysql.sh
 !docs/docker/postgresql/01-init-pgvector.sh
 mapper/
+!ai-agent-*/src/main/resources/mapper/
+!ai-agent-*/src/main/resources/mapper/**
 prompt/
 !ai-agent-app/src/main/resources/prompt/
 !ai-agent-app/src/main/resources/prompt/**
