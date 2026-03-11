@@ -74,6 +74,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8066:8066"
     depends_on:

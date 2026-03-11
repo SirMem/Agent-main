@@ -50,6 +50,7 @@ AGENTS.md
 PROMPT.md
 application-*.yml
 !application-dev.yml
+!application-docker.yml
 .env
 .env.*
 !.env.example
