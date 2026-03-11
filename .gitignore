@@ -39,20 +39,8 @@ dist/
 .vite/
 .cache/
 
-# ==================== Docker ====================
-.docker/
-*.db
-*.sqlite
-*.sqlite3
 
 # ==================== Personal ====================
-AGENTS.md
-PROMPT.md
-application-*.yml
-!application-dev.yml
 .env
 .env.*
 !.env.example
-*.sh
-mapper/
-prompt/

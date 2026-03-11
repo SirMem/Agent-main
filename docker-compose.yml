@@ -14,6 +14,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./backend/docs/init.sql:/opt/init/init.sql:ro
+      - ./backend/docs/docker/mysql/01-init-mysql.sh:/docker-entrypoint-initdb.d/01-init-mysql.sh:ro
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -31,10 +33,14 @@ services:
       POSTGRES_USER: ${POSTGRESQL_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
       POSTGRES_DB: ${POSTGRESQL_DB_NAME}
+      EMBEDDING_SCHEMA_NAME: ${EMBEDDING_SCHEMA_NAME}
+      EMBEDDING_TABLE_NAME: ${EMBEDDING_TABLE_NAME}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS}
     ports:
       - "5432:5432"
     volumes:
       - pg-data:/var/lib/postgresql/data
+      - ./backend/docs/docker/postgresql/01-init-pgvector.sh:/docker-entrypoint-initdb.d/01-init-pgvector.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRESQL_USERNAME}"]
       interval: 10s
