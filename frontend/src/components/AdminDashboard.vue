@@ -393,7 +393,7 @@ onBeforeUnmount(() => {
 
                 <div class="mb-6 flex items-center justify-center text-center">
                     <div class="text-[26px] font-extrabold tracking-[0.02em] text-[var(--text-primary)]">
-                        Dasi AI 目前已经处理了
+                         AI 目前已经处理了
                         <span class="mx-2 text-[42px] font-black text-[var(--accent-strong)] tabular-nums">
                             {{ dashboard?.countInfo?.messageCount ?? 0 }}
                         </span>

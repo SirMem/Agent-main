@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive, ref, onMounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import logoImg from '../assets/logo.jpg';
+import logoImg from '../assets/logo1.jpg';
 import chatIconDark from '../assets/chat-white.svg';
 import chatIconLight from '../assets/chat-black.svg';
 import workIconDark from '../assets/work-white.svg';
@@ -432,7 +432,7 @@ const toggleTheme = () => {
                 </div>
                 <div>
                     <div class="text-[20px] font-bold transition-colors duration-200 group-hover:text-[#9ed7ff]">
-                        Dasi AI
+                        Sirmem AI
                     </div>
                     <div class="text-[12px] text-[rgba(231,236,244,0.7)]">RAG · MCP · OPENAI</div>
                 </div>

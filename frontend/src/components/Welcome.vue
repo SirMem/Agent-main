@@ -31,8 +31,8 @@ const chatActions = [
     },
     {
         key: 'chat-student',
-        label: 'Dasi 是什么大学的学生',
-        prompt: 'Dasi 是什么大学的学生'
+        label: 'Sirmem 是什么大学的学生',
+        prompt: 'Sirmem 是什么大学的学生'
     },
     {
         key: 'chat-fire-notice',
@@ -45,14 +45,14 @@ const chatActions = [
 const workActions = [
     {
         key: 'work-weather',
-        label: '请你查询广州今日天气，生成一份穿衣提醒，发送邮件到邮箱 1740929297@qq.com，并且使用 HTML 进行美化。',
-        prompt: '请你查询广州今日天气，生成一份穿衣提醒，发送邮件到邮箱 1740929297@qq.com，并且使用 HTML 进行美化。',
+        label: '请你查询广州今日天气，生成一份穿衣提醒，发送邮件到邮箱 2293038408@qq.com，并且使用 HTML 进行美化。',
+        prompt: '请你查询广州今日天气，生成一份穿衣提醒，发送邮件到邮箱 2293038408@qq.com，并且使用 HTML 进行美化。',
         agentId: 'agent_weather'
     },
     {
         key: 'work-nba',
-        label: '联网搜索最近最新的 NBA 交易新闻，筛选 2 条并各写 1-2 句摘要，然后发送到企业微信（文本类型）。',
-        prompt: '联网搜索最近最新的 NBA 交易新闻，筛选 2 条并各写 1-2 句摘要，然后发送到企业微信（文本类型）。',
+        label: '联网搜索最近最新的羽毛球比赛新闻，筛选 2 条并各写 1-2 句摘要，然后发送到企业微信（文本类型）。',
+        prompt: '联网搜索最近最新的羽毛球比赛新闻，筛选 2 条并各写 1-2 句摘要，然后发送到企业微信（文本类型）。',
         agentId: 'agent_web'
     },
     {
@@ -148,28 +148,28 @@ const triggerChatAction = async (action) => {
     let ragTag = '';
 
     if (action?.key === 'chat-self-intro') {
-        const target = pickModelByKeyword(models, 'doubao-seed-1.8');
+        const target = pickModelByKeyword(models, 'Pro/zai-org/GLM-4.7');
         if (!target) {
-            throw new Error('未找到 doubao-seed-1.8 模型，请先在后台配置对应 client');
+            throw new Error('未找到 Pro/zai-org/GLM-4.7 模型，请先在后台配置对应 client');
         }
         selectedModel = target;
     } else if (action?.key === 'chat-java') {
-        const target = pickModelByKeyword(models, 'deepseek-chat');
+        const target = pickModelByKeyword(models, 'Pro/zai-org/GLM-4.7');
         if (!target) {
-            throw new Error('未找到 deepseek-chat 模型，请先在后台配置对应 client');
+            throw new Error('未找到 Pro/zai-org/GLM-4.7 模型，请先在后台配置对应 client');
         }
         selectedModel = target;
     } else if (action?.key === 'chat-student') {
-        const target = pickModelByKeyword(models, 'qwen-plus');
+        const target = pickModelByKeyword(models, 'Pro/zai-org/GLM-4.7');
         if (!target) {
-            throw new Error('未找到 qwen-plus 模型，请先在后台配置对应 client');
+            throw new Error('未找到 Pro/zai-org/GLM-4.7 模型，请先在后台配置对应 client');
         }
         selectedModel = target;
-        ragTag = 'dasi-info';
+        ragTag = 'sirmem-info';
     } else if (action?.key === 'chat-fire-notice') {
-        const target = pickModelByKeyword(models, 'glm-5');
+        const target = pickModelByKeyword(models, 'Pro/zai-org/GLM-4.7');
         if (!target) {
-            throw new Error('未找到 glm-5 模型，请先在后台配置 glm-5 对应 client');
+            throw new Error('未找到 Pro/zai-org/GLM-4.7 模型，请先在后台配置 glm-5 对应 client');
         }
         selectedModel = target;
 
@@ -210,6 +210,8 @@ const triggerWorkAction = async (action) => {
           : Array.isArray(agentResp?.data)
             ? agentResp.data
             : [];
+
+    debugger;
 
     const agents = normalizeOptions(agentList, 'agentId', 'agentName');
     if (!agents.length) {
@@ -323,7 +325,7 @@ onBeforeUnmount(() => {
             <div
                 class="mx-auto flex h-full w-full max-w-[1060px] items-center justify-between pl-[24px] pr-[calc(24px+var(--scrollbar-w))] text-[13px] text-[var(--text-secondary)] max-[720px]:pl-[8px] max-[720px]:pr-[calc(8px+var(--scrollbar-w))]"
             >
-                <span>© 2025 Dasi</span>
+
                 <span>内容为 AI 生成，仅供参考，请注意甄别</span>
             </div>
         </footer>

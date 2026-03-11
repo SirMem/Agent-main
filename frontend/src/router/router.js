@@ -144,7 +144,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const auth = getStoredAuth();
     const isAdminRoute = to.path.startsWith('/admin');
-    document.title = isAdminRoute ? 'Dasi AI 后台管理' : 'Dasi AI';
+    document.title = isAdminRoute ? '后台管理' : 'AI';
 
     // Global auth gate: if not logged in, allow only the login pages.
     if (!auth.token) {

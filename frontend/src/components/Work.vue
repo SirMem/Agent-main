@@ -887,7 +887,7 @@ onBeforeUnmount(() => {
             <div
                 class="mx-auto flex h-full w-full max-w-[900px] items-center justify-between pl-[24px] pr-[calc(24px+var(--scrollbar-w))] text-[13px] text-[var(--text-secondary)] max-[720px]:pl-[8px] max-[720px]:pr-[calc(8px+var(--scrollbar-w))]"
             >
-                <span>© 2025 Dasi</span>
+
                 <span>内容为 AI 生成，仅供参考，请注意甄别</span>
             </div>
         </footer>

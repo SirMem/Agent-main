@@ -1,6 +1,6 @@
 export const DEFAULT_TYPEWRITER_SEGMENTS = [
     [
-        '你好，我是 Dasi。',
+        '你好，我是 Sirmem。',
         '擅长陪你思考、创作与推演。',
         '随时输入第一条消息开始体验～'
     ],
