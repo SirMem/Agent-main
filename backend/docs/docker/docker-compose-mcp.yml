@@ -69,4 +69,5 @@ services:
 
 networks:
   ai-agent:
-    external: true
+    name: ai-agent
+    driver: bridge

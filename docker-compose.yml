@@ -21,7 +21,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - agent-net
+      - ai-agent
 
   postgresql:
     image: pgvector/pgvector:pg16
@@ -41,7 +41,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - agent-net
+      - ai-agent
 
   redis:
     image: redis:7-alpine
@@ -58,7 +58,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - agent-net
+      - ai-agent
 
   backend:
     build:
@@ -78,7 +78,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - agent-net
+      - ai-agent
 
   frontend:
     build:
@@ -91,7 +91,7 @@ services:
     depends_on:
       - backend
     networks:
-      - agent-net
+      - ai-agent
 
 volumes:
   mysql-data:
@@ -99,5 +99,6 @@ volumes:
   redis-data:
 
 networks:
-  agent-net:
+  ai-agent:
+    name: ai-agent
     driver: bridge
