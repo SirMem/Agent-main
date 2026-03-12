@@ -1,6 +1,6 @@
 services:
   mcp-server-csdn:
-    image: dasi0227/mcp-server-csdn:0.1.0
+    image: mcp-server-csdn:0.1.0
     container_name: mcp-server-csdn
     restart: unless-stopped
     ports:
@@ -13,7 +13,7 @@ services:
       - ai-agent
 
   mcp-server-wecom:
-    image: dasi0227/mcp-server-wecom:0.1.0
+    image: mcp-server-wecom:0.1.0
     container_name: mcp-server-wecom
     restart: unless-stopped
     ports:
@@ -27,7 +27,7 @@ services:
       - ai-agent
 
   mcp-server-amap:
-    image: dasi0227/mcp-server-amap:0.1.0
+    image: mcp-server-amap:0.1.0
     container_name: mcp-server-amap
     restart: unless-stopped
     ports:
@@ -39,7 +39,7 @@ services:
       - ai-agent
 
   mcp-server-email:
-    image: dasi0227/mcp-server-email:0.1.0
+    image: mcp-server-email:0.1.0
     container_name: mcp-server-email
     restart: unless-stopped
     ports:
@@ -56,7 +56,7 @@ services:
       - ai-agent
 
   mcp-server-bocha:
-    image: dasi0227/mcp-server-bocha:0.1.0
+    image: mcp-server-bocha:0.1.0
     container_name: mcp-server-bocha
     restart: unless-stopped
     ports:
